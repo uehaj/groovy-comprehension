@@ -1,0 +1,2 @@
+# global transformation to handle list/monad comprehension
+groovyx.comprehension.transform.ComprehensionTransformation

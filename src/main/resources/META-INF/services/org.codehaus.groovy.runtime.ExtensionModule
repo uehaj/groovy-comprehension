@@ -1,0 +1,4 @@
+# see http://groovy.codehaus.org/Creating+an+extension+module
+moduleName=comprehension
+moduleVersion=0.1
+extensionClasses=groovyx.comprehension.extension.ListComprehensionExtension
