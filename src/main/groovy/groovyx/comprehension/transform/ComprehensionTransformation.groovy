@@ -44,7 +44,6 @@ import java.util.List;
  * @author Uehara Junji(@uehaj)
  */
 
-//@GroovyASTTransformation(phase = CompilePhase.SEMANTIC_ANALYSIS)
 @GroovyASTTransformation(phase = CompilePhase.CONVERSION)
 public class ComprehensionTransformation implements ASTTransformation {
 

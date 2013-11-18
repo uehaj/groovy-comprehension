@@ -60,6 +60,10 @@ class ListComprehensionExtension {
         }
     }
 
+    static List where(List _, value) { // alias of guard
+        return guard(_, value)
+    }
+
     static List autoGuard(List _, value) {
         if (value instanceof Boolean) {
             return guard(_, value)
@@ -71,9 +75,6 @@ class ListComprehensionExtension {
         return [value]
     }
 
-    static List where(List _, value) { // alias of yield
-        return yield(_, value)
-    }
 
     static final List mzero = []
 }

@@ -13,8 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package groovyx.comprehension.keyword;
+package groovyx.comprehension.monad
 
-final class select {
-    private select(){}
+abstract class MonadPlus implements Monad {
+    abstract def guard(Boolean b)
+    def autoGuard(exp) {
+        if (exp instanceof Boolean) {
+            return guard(exp)
+        }
+        exp
+    }
+    def where(Boolean b) {
+        guard(b)
+    }
 }

@@ -13,8 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package groovyx.comprehension.keyword;
+package groovyx.comprehension.monad
 
-final class select {
-    private select(){}
+interface Monad {
+    def yield(x)
+    def bind(Closure c)
 }

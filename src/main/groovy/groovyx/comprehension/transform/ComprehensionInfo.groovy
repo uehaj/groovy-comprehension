@@ -36,6 +36,7 @@ import java.util.List;
 public class ComprehensionInfo {
 
     private final static PREFIX='$$'
+    private final static NAME_OF_BIND_METHOD = 'bind'
 
     private final SourceUnit sourceUnit
     
@@ -44,10 +45,15 @@ public class ComprehensionInfo {
     Expression yieldValue;
     List<Operation> steps;
 
-    static class Operation {
+    static abstract class Operation {
         Expression exp;
+        abstract String getVarName();
     }
     static class Guard extends Operation {
+        @Override
+        String getVarName() {
+            return null
+        }
         String toString() {
             "    guard($exp)\n"
         }
@@ -199,16 +205,16 @@ public class ComprehensionInfo {
     /*
      AST tree to be generated:
 
-    MethodCall - [1,2,3].$bind{...
+    MethodCall - [1,2,3].bind{...
       List [1,2,3]
-      Constant - $bind String
+      Constant - bind String
       ArgumentList
         ClosureExpression
           Parameter - x
           BlockStatement
             ExpressionStatement: MethodCallExpression
               MethodCall - [4,5,6]
-                Constant $bind:String
+                Constant bind:String
                 ArgumentList ({ y -> ... }
                 ClosureExpression
                 Parameter - y
@@ -254,13 +260,13 @@ public class ComprehensionInfo {
         def exp = yieldValue
         def n = 0
         steps.reverse().eachWithIndex { Operation step, int idx ->
-            def varName = step instanceof CallBind ? step.varName : null
+            def varName = step.varName;
             Parameter parameter = new Parameter(ClassHelper.DYNAMIC_TYPE, varName ?: PREFIX+"${n++}")
             if (idx == steps.size()-1) {
-                exp = new MethodCallExpression(step.exp, "bind", genRhs(exp, parameter));
+                exp = new MethodCallExpression(step.exp, NAME_OF_BIND_METHOD, genRhs(exp, parameter));
             }
             else {
-                exp = new MethodCallExpression(genLhs(step.exp), "bind", genRhs(exp, parameter));
+                exp = new MethodCallExpression(genLhs(step.exp), NAME_OF_BIND_METHOD, genRhs(exp, parameter));
             }
         }
         return exp
