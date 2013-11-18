@@ -8,6 +8,8 @@ repositories {
 
 dependencies {
     compile 'org.codehaus.groovy:groovy-all:2.2.0-rc-3'
+	testCompile 'org.spockframework:spock-core:0.7-groovy-2.0'
+    
 }
 
 apply plugin: 'maven'
@@ -19,3 +21,4 @@ uploadArchives {
         }
     }
 }
+
