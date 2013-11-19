@@ -1,4 +1,3 @@
-
 apply plugin: 'groovy'
 
 repositories {
@@ -9,10 +8,13 @@ repositories {
 dependencies {
     compile 'org.codehaus.groovy:groovy-all:2.2.0-rc-3'
 	testCompile 'org.spockframework:spock-core:0.7-groovy-2.0'
-    
 }
 
 apply plugin: 'maven'
+
+group = 'org.jggug.kobo'
+archivesBaseName = 'groovy-comprehension'
+version = '0.1'
 
 uploadArchives {
     repositories {
@@ -22,3 +24,25 @@ uploadArchives {
     }
 }
 
+task sourcesJar(type: Jar, dependsOn:classes) {
+     classifier = 'sources'
+     from sourceSets.main.allSource
+}
+
+artifacts {
+     archives sourcesJar
+}
+
+[install.repositories.mavenInstaller, uploadArchives.repositories.mavenDeployer]*.pom*.whenConfigured { pom ->
+    pom.project {
+        inceptionYear '2013'
+        packaging 'jar'
+        licenses {
+            license {
+                name 'The Apache Software License, Version 2.0'
+                url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                distribution 'repo'
+            }
+        }
+    }
+}
