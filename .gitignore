@@ -1,0 +1,23 @@
+*~
+# ignore IDEA files
+*.iml
+*.ipr
+*.iws
+.idea
+# ignore eclipse files
+.project
+.classpath
+.settings
+.scala_dependencies
+.externalToolBuilders
+.factorypath
+# ignore others
+out
+*.class
+.cache
+.DS_Store
+.gradle
+bin
+build
+#.*#
+tmp
