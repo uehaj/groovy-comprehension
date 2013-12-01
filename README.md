@@ -1,3 +1,8 @@
+Under construction
+====================
+
+<!--
+
 groovy-comprehension
 ====================
 
@@ -27,7 +32,7 @@ assert select([x,y]) {
 Guard
 -----------------
 
-You can specify gurad clause to filter values.
+You can specify guard clause to filter values.
 
 ```
 assert select([x,y]) {
@@ -54,6 +59,57 @@ assert select([x,y]) {
 
 If the expression in comprehension has boolean value at runtime, it is
 regarded as guard clause specified.
+
+Syntax And Transformed Form
+----------------------------------
+
+General form is:
+
+```
+select (<YIELD EXPRESSION>) {
+    <VAR1> : <LIST> or <RANGE>
+    <GUARD1>
+    <GUARD2>
+      :
+    <VAR2> : <LIST> or <RANGE>
+    <GUARD3>
+      :
+}
+```
+
+Another form is:
+
+```
+select {
+    <VAR1> : <LIST> or <RANGE>
+    <GUARD1>
+    <GUARD2>
+      :
+    <VAR2> : <LIST> or <RANGE>
+    <GUARD3>
+      :
+    yield <YIELD EXPRESSION>
+}
+```
+
+Both of above are translated into follwing code on AST.
+(Actually it is little bit simplified concerned with auto guard.)
+This module is implemented as Global AST transformation.
+
+```
+// select begin
+    (<LIST> or <RANGE>).bind { <VAR1> ->
+    delegate.guard(<GUARD1>).bind { _1 ->
+    delegate.guard(<GUARD2>).bind { _2 ->
+      :
+    (<LIST> or <RANGE>).bind { <VAR2> ->
+    delegate.guard(<GUARD3>).bind { _3 ->
+      :
+    yield(<YIELD EXPRESSION>)
+    }}}}}
+// select end
+```
+
 
 Another Example
 -----------------
@@ -95,7 +151,7 @@ You can use @Grab annotation:
 
 ```
 @GrabResolver(name="maven-repo", root="https://raw.github.com/uehaj/maven-repo/gh-pages/snapshot")
-@Grab("org.jggug.kobo:groovy-comprehension:0.1")
+@Grab("org.jggug.kobo:groovy-comprehension:0.2")
 import groovyx.comprehension.keyword.select;
 ```
 
@@ -103,8 +159,12 @@ Java8 streams is separated module for compatibility, you have to specify:
 
 ```
 @GrabResolver(name="maven-repo", root="https://raw.github.com/uehaj/maven-repo/gh-pages/snapshot")
-@Grab("org.jggug.kobo:groovy-java8-comprehension:0.1")
+@Grab("org.jggug.kobo:groovy-java8-comprehension:0.2")
 import groovyx.comprehension.keyword.select;
+
+select(n) { n:1..10 }.each{
+  println it
+}
 ```
 
 
@@ -116,19 +176,20 @@ You can change the keyword for comprehension with 'import as'.
 ```
 import groovyx.comprehension.keyword.select as foreach
 
-assert select(n) {
+assert foreach(n) {
     n: 1..10
 } == [1,2,3,4,5,6,7,8,9,10]
 
 ```
 
-Monadic
-----------
+Monad comprehension
+--------------------
 
-Any class which have follwing instance method can be used with comprehension:
+Any class which have follwing instance method can be used with comprehension.
 
 * bind(Closure c)
 * yield(x)
 * autoGuard(exp)
 * mzero()
 
+-->
