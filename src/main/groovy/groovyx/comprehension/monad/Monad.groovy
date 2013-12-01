@@ -16,6 +16,6 @@
 package groovyx.comprehension.monad
 
 interface Monad {
-    def yield(x)
     def bind(Closure c)
+    def yield(x)
 }

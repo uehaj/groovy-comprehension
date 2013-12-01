@@ -1,3 +1,10 @@
+/**
+ * Before run this test, you have to do follwing command:
+ *
+ * % gradle updateArchives
+ *
+ * This installs maven pom to /tmp/myRepo directory.
+ */
 package groovyx.comprehension.extension
 import groovyx.comprehension.extension.ListComprehensionExtension
 

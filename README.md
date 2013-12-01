@@ -7,7 +7,7 @@ Overview
 groovy-comprehension module provides 'list comprehension' functionality like Haskell,Scala or Python.
 
 ```
-import groovyx.comprehension.keyword.select;
+import groovyx.comprehension.keyword.select
 
 assert select([x,y]) {
     x: [1,2,3]
@@ -90,4 +90,45 @@ assert select ([a,b,c]) {
 
 How to use
 -------------
+
+You can use @Grab annotation:
+
+```
+@GrabResolver(name="maven-repo", root="https://raw.github.com/uehaj/maven-repo/gh-pages/snapshot")
+@Grab("org.jggug.kobo:groovy-comprehension:0.1")
+import groovyx.comprehension.keyword.select;
+```
+
+Java8 streams is separated module for compatibility, you have to specify:
+
+```
+@GrabResolver(name="maven-repo", root="https://raw.github.com/uehaj/maven-repo/gh-pages/snapshot")
+@Grab("org.jggug.kobo:groovy-java8-comprehension:0.1")
+import groovyx.comprehension.keyword.select;
+```
+
+
+Change the keyword indicating comprehension
+---------------------------------------------------------
+
+You can change the keyword for comprehension with 'import as'.
+
+```
+import groovyx.comprehension.keyword.select as foreach
+
+assert select(n) {
+    n: 1..10
+} == [1,2,3,4,5,6,7,8,9,10]
+
+```
+
+Monadic
+----------
+
+Any class which have follwing instance method can be used with comprehension:
+
+* bind(Closure c)
+* yield(x)
+* autoGuard(exp)
+* mzero()
 
