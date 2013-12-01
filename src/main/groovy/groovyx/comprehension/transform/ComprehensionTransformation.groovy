@@ -149,6 +149,8 @@ public class ComprehensionTransformation implements ASTTransformation {
         private final ReaderSource source;
         private final SourceUnit sourceUnit;
 
+        private boolean autoGuard = true;
+
         /**
          * Creates the trap and captures all the ways in which a class may be referenced via imports.
          *
@@ -163,6 +165,7 @@ public class ComprehensionTransformation implements ASTTransformation {
             if (sourceUnit == null) throw new IllegalArgumentException("Null: sourceUnit");
             this.source = source;
             this.sourceUnit = sourceUnit;
+            this.autoGuard = Boolean.valueOf(System.getProperty("groovy.comprehension.autoGuard", "true"));
 
             // factory type may be references as fully qualified, an import, or an alias
             factoryTargets.add(TRIGGER_KEYWORD_FQCN);//default package
@@ -207,10 +210,9 @@ public class ComprehensionTransformation implements ASTTransformation {
          */
         @groovy.transform.TypeChecked
         public void visitMethodCallExpression(MethodCallExpression call) {
-            // List.for([a,b,c]) { a:(1..10); b:(1..a); c:(a..a+b); a**2 + b**2 == c**2); }
             if (isComprehension(call)) {
 //              println "INFO="+call.hashCode()+"call.method"+call.method
-                ComprehensionInfo info = new ComprehensionInfo(call, sourceUnit);
+                ComprehensionInfo info = new ComprehensionInfo(call, sourceUnit, autoGuard);
                 if (info.yieldValue == null || info.steps == null){
                     return;
                 }

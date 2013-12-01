@@ -7,14 +7,14 @@ repositories {
 
 dependencies {
     compile 'org.codehaus.groovy:groovy-all:2.2.0-rc-3'
-	testCompile 'org.spockframework:spock-core:0.7-groovy-2.0'
+	testCompile 'junit:junit:4.11'
 }
 
 apply plugin: 'maven'
 
 group = 'org.jggug.kobo'
 archivesBaseName = 'groovy-comprehension'
-version = '0.1'
+version = '0.2'
 
 uploadArchives {
     repositories {

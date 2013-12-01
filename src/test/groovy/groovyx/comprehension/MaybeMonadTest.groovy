@@ -41,6 +41,14 @@ class MaybeMonadTest extends GroovyTestCase {
                     new Just(7)
                 }) == new Just(7)
     }
+    void test06() {
+        assert (select {
+                    new Just(1)
+                    new Just(3)
+                    false
+                    new Just(7)
+                }) == new Nothing()
+    }
 }
 
 abstract class Maybe<T> extends MonadPlus {
@@ -55,13 +63,8 @@ abstract class Maybe<T> extends MonadPlus {
         bind0(value)
     }
     abstract bind0(value);
-    def guard(Boolean b) {
-        if (b) {
-            return yield(new Just(null))
-        }
-        else {
-            return yiled(Nothing)
-        }
+    def mzero() {
+        new Nothing()
     }
 }
 

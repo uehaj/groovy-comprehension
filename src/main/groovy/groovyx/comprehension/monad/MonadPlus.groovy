@@ -16,7 +16,14 @@
 package groovyx.comprehension.monad
 
 abstract class MonadPlus implements Monad {
-    abstract def guard(Boolean b)
+    def guard(Boolean b) {
+        if (b) {
+            return yield(null)
+        }
+        else {
+            return mzero()
+        }
+    }
     def autoGuard(exp) {
         if (exp instanceof Boolean) {
             return guard(exp)
@@ -26,5 +33,6 @@ abstract class MonadPlus implements Monad {
     def where(Boolean b) {
         guard(b)
     }
+    abstract def mzero()
     // TODO: mplus
 }

@@ -20,14 +20,6 @@ package groovyx.comprehension.extension
  */
 class ListComprehensionExtension {
 
-    static List rightShiftUnsigned(List self, @DelegatesTo(List) Closure c) { // Haskell's >>=
-        bind(self, c);
-    }
-
-    static List rightShift(List self, value) { // Haskell's >>
-        bind0(self, value);
-    }
-    
     static List bind(List self, @DelegatesTo(List) Closure c) { // Haskell's >>=
         c.delegate = self
         self.collect(c).inject([], {acc,elem->acc+elem})
@@ -56,7 +48,7 @@ class ListComprehensionExtension {
             return yield(null, null)
         }
         else {
-            return mzero
+            return mzero(null)
         }
     }
 
@@ -71,10 +63,11 @@ class ListComprehensionExtension {
         return value
     }
 
-    static List yield(List _, value) { // unit
+    static List yield(List _, value) { // haskell's return
         return [value]
     }
 
-
-    static final List mzero = []
+    static List mzero(List _) { // haskell's mzero
+        return []
+    }
 }

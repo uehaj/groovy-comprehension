@@ -37,13 +37,14 @@ public class ComprehensionInfo {
 
     private final static PREFIX='$$'
     private final static NAME_OF_BIND_METHOD = 'bind'
+    private final static NAME_OF_UNIT_METHOD = 'yield'
 
     private final SourceUnit sourceUnit
     
-    //    ClassExpression clazz; // monad class
-    def clazz; // monad class
     Expression yieldValue;
     List<Operation> steps;
+
+    boolean autoGuard
 
     static abstract class Operation {
         Expression exp;
@@ -134,9 +135,10 @@ public class ComprehensionInfo {
      */
 
     @groovy.transform.TypeChecked
-    public ComprehensionInfo(MethodCallExpression call, SourceUnit sourceUnit) {
+    public ComprehensionInfo(MethodCallExpression call, SourceUnit sourceUnit, boolean autoGuard) {
         this.sourceUnit = sourceUnit
-        this.clazz = call.objectExpression // now not using
+        // this.clazz = call.objectExpression // now not using
+        this.autoGuard = autoGuard
         ArgumentListExpression arguments = (ArgumentListExpression)call.arguments
 
         if (arguments.expressions.size() == 1) { // select { ... ; yield(value) }
@@ -159,7 +161,7 @@ public class ComprehensionInfo {
             if (arguments.expressions[1] instanceof ClosureExpression) {
                 this.yieldValue = new MethodCallExpression(
                     new VariableExpression("delegate"),
-                    new ConstantExpression("yield"),
+                    new ConstantExpression(NAME_OF_UNIT_METHOD),
                     new ArgumentListExpression(arguments.expressions[0]))
                 BlockStatement code = (BlockStatement)arguments.expressions[1].code
                 if (code.statements.size() < 1) {
@@ -197,40 +199,6 @@ public class ComprehensionInfo {
         return result
     }
 
-    public String toString() {
-        "class=${clazz.type}"+
-        "yieldValue=${yieldValue.expressions.collect {it.variable}}\n"
-        "steps=${steps.collect { it.toString() }}\n"
-    }
-    /*
-     AST tree to be generated:
-
-    MethodCall - [1,2,3].bind{...
-      List [1,2,3]
-      Constant - bind String
-      ArgumentList
-        ClosureExpression
-          Parameter - x
-          BlockStatement
-            ExpressionStatement: MethodCallExpression
-              MethodCall - [4,5,6]
-                Constant bind:String
-                ArgumentList ({ y -> ... }
-                ClosureExpression
-                Parameter - y
-                BlockStatement (1)
-                  ExpressionStatement - MethodCallExpression
-                    MethodCall  - List.yield([x*y])
-                      Variable - List
-                      Constant - yield
-                      ArgumentList - ([(x*y)])
-                        List [(x*y)]
-                          Binary(x*y)
-                            Variable - x
-                            Variable - y
-
-                    
-    */
     ASTNode genRhs(exp, parameter) {
         Parameter[] parameters = [parameter]
         ClosureExpression clos = new ClosureExpression(
@@ -245,11 +213,16 @@ public class ComprehensionInfo {
     }
 
     ASTNode genLhs(exp) {
-        return new MethodCallExpression(
-            new VariableExpression("delegate"),
-            new ConstantExpression("autoGuard"),
-            new ArgumentListExpression(exp)
-        );
+        if (autoGuard) {
+            return new MethodCallExpression(
+                new VariableExpression("delegate"),
+                new ConstantExpression("autoGuard"),
+                new ArgumentListExpression(exp)
+            );
+        }
+        else {
+            return exp
+        }
     }
 
     void setReferencedLocalVariable(exp, varName) {
@@ -270,6 +243,5 @@ public class ComprehensionInfo {
             }
         }
         return exp
-    }
-    
+    }   
 }

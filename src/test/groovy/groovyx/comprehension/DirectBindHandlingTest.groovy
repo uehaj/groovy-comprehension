@@ -12,43 +12,13 @@ class DirectBindHandlingTest extends GroovyTestCase {
         assert listManip0 == [4,5,6,8,10,12,12,15,18]
     }
 
-
-    void test02() {
-        def listManip1 = [1,2,3] >>> {x->      // listManip1 = do x <- [1,2,3]
-                         [4,5,6] >>> {y->      //                 y <- [4,5,6]
-                         [x*y]                 //                 pure x*y
-                         }}
-        assert listManip1 == [4,5,6,8,10,12,12,15,18]
-    }
-
-    void test03() {
-        def listManip2 = (1..10) >>> {z->
-                         (1..z) >>> {x->
-                         (x..z) >>> {y->
-                         guard(x**2 + y**2 == z**2) >>
-                         yield([x, y, z])
-                         }}}
-        assert listManip2 ==  [[3,4,5], [6,8,10]]
-    }
-
-    void test04() {
-        def listManip4 = (1..10) >>> {a->
-                         (1..a) >>> {b->
-                         (a..a+b) >>> {c->
-                         guard(a**2 + b**2 == c**2) >>> {_->
-                         yield([a,b,c])
-                         }}}}
-
-        assert listManip4 == [[4,3,5], [8,6,10]]
-    }
-
     void test05() {
-        def listManip5 = (1..10) >>> {a->
-                         (1..a) >>> {b->
-                         (a..a+b) >>> {c->
-                         guard(a**2 + b**2 == c**2) >>
-                         yield([a,b,c])
-                         }}}
+        def listManip5 = select ([a,b,c]) {
+                           a: 1..10
+                           b: 1..a
+                           c: a..a+b
+                           a**2 + b**2 == c**2
+                         }
 
         assert listManip5 == [[4,3,5], [8,6,10]]
     }
@@ -57,10 +27,10 @@ class DirectBindHandlingTest extends GroovyTestCase {
 // つまり「1 or 2 or 3」と「4 or 5 or 6」を掛け算した結果は、
 // 「4 or 5 or 6 or 8 or 10 or 12 or 12 or 15 or 18」となる。
     void test06() {
-        def listManip6 = [1,2,3] >>> {x->      // listManip6 = do x <- [1,2,3]
-                         [4,5,6] >>> {y->      //                 y <- [4,5,6]
-                         [x*y]                 //                 pure x*y
-                         }}
+        def listManip6 = select (x*y) {
+                             x: [1,2,3]
+                             y: [4,5,6]
+                         }
         assert listManip6 == [1*4, 1*5, 1*6, 2*4, 2*5, 2*6, 3*4, 3*5, 3*6]
     }
 
