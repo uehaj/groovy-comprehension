@@ -3,51 +3,54 @@ package groovyx.comprehension
 import groovyx.comprehension.keyword.select;
 import groovyx.comprehension.monad.MonadPlus
 
+@Newify([Just,Nothing])
 class MaybeMonadTest extends GroovyTestCase {
-    void test01() {
-        println new Nothing() == new Nothing()
+    void test00() {
+        assert Nothing() == Nothing()
+    }
         
-        assert (new Just(1) >>> { x->
-                new Just("abc") >>> { y->
+    void test01() {
+        assert (Just(1) >>> { x->
+                Just("abc") >>> { y->
                 yield("<"+x+y+">")
                }}).toString() == "Just <1abc>"
     }
 
     void test02() {
-        assert (((new Just(1) >> new Just(3)) >> new Nothing()) >> new Just(7)) == new Nothing()
+        assert (((Just(1) >> Just(3)) >> Nothing()) >> Just(7)) == Nothing()
     }
 
     void test03() {
         assert (select {
-                  x: new Just(1)
-                  y: new Just("abc")
+                  x: Just(1)
+                  y: Just("abc")
                   yield("<"+x+y+">")
                 }).toString() == "Just <1abc>"
     }
 
     void test04() {
         assert (select {
-                    new Just(1)
-                    new Just(3)
-                    new Nothing()
-                    new Just(7)
-                }) == new Nothing()
+                    Just(1)
+                    Just(3)
+                    Nothing()
+                    Just(7)
+                }) == Nothing()
     }
     void test05() {
         assert (select {
-                    new Just(1)
-                    new Just(3)
-                    new Just(4)
-                    new Just(7)
-                }) == new Just(7)
+                    Just(1)
+                    Just(3)
+                    Just(4)
+                    Just(7)
+                }) == Just(7)
     }
     void test06() {
         assert (select {
-                    new Just(1)
-                    new Just(3)
+                    Just(1)
+                    Just(3)
                     false
-                    new Just(7)
-                }) == new Nothing()
+                    Just(7)
+                }) == Nothing()
     }
 }
 

@@ -1,15 +1,21 @@
-Under construction
-====================
-
-<!--
-
 groovy-comprehension
 ====================
 
 Overview
 -----------------
 
-groovy-comprehension module provides 'list comprehension' functionality like Haskell,Scala or Python.
+groovy-comprehension module provides list comprehension functionality similar to Haskell, Scala or Python.
+Let's look at simple example.
+
+```
+import groovyx.comprehension.keyword.select
+
+assert select(x*2) {
+    x: [1,2,3]
+} == [2, 4, 6]
+```
+
+Very simple. Follwing uses two variable x and y.
 
 ```
 import groovyx.comprehension.keyword.select
@@ -20,6 +26,7 @@ assert select([x,y]) {
 } == [[1,5], [1,6], [1,7], [2,5],[2,6],[2,7], [3,5],[3,6],[3,7]]
 ```
 
+Combinations are generated.
 You can also use groovy's range for sequential value.
 
 ```
@@ -46,7 +53,7 @@ assert select([x,y]) {
 Auto Guard
 -----------------
 
-Previous code is same as follwing:
+Previous code is same as following:
 
 ```
 assert select([x,y]) {
@@ -59,57 +66,6 @@ assert select([x,y]) {
 
 If the expression in comprehension has boolean value at runtime, it is
 regarded as guard clause specified.
-
-Syntax And Transformed Form
-----------------------------------
-
-General form is:
-
-```
-select (<YIELD EXPRESSION>) {
-    <VAR1> : <LIST> or <RANGE>
-    <GUARD1>
-    <GUARD2>
-      :
-    <VAR2> : <LIST> or <RANGE>
-    <GUARD3>
-      :
-}
-```
-
-Another form is:
-
-```
-select {
-    <VAR1> : <LIST> or <RANGE>
-    <GUARD1>
-    <GUARD2>
-      :
-    <VAR2> : <LIST> or <RANGE>
-    <GUARD3>
-      :
-    yield <YIELD EXPRESSION>
-}
-```
-
-Both of above are translated into follwing code on AST.
-(Actually it is little bit simplified concerned with auto guard.)
-This module is implemented as Global AST transformation.
-
-```
-// select begin
-    (<LIST> or <RANGE>).bind { <VAR1> ->
-    delegate.guard(<GUARD1>).bind { _1 ->
-    delegate.guard(<GUARD2>).bind { _2 ->
-      :
-    (<LIST> or <RANGE>).bind { <VAR2> ->
-    delegate.guard(<GUARD3>).bind { _3 ->
-      :
-    yield(<YIELD EXPRESSION>)
-    }}}}}
-// select end
-```
-
 
 Another Example
 -----------------
@@ -167,7 +123,6 @@ select(n) { n:1..10 }.each{
 }
 ```
 
-
 Change the keyword indicating comprehension
 ---------------------------------------------------------
 
@@ -182,6 +137,53 @@ assert foreach(n) {
 
 ```
 
+Syntax And Conversion
+----------------------------------
+
+General form of comprehension is:
+
+```
+select (<YIELD EXPRESSION>) {
+    <VAR1> : <LIST> or <RANGE>
+    <GUARD1>
+    <GUARD2>
+      :
+    <VAR2> : <LIST> or <RANGE>
+    <GUARD3>
+      :
+}
+```
+
+Another form is:
+
+```
+select {
+    <VAR1> : <LIST> or <RANGE>
+    <GUARD1>
+    <GUARD2>
+      :
+    <VAR2> : <LIST> or <RANGE>
+    <GUARD3>
+      :
+    yield <YIELD EXPRESSION>
+}
+```
+
+Both of above are translated into same following code at compile time.
+This translation is implemented as global AST transformation.
+
+```
+// select begin
+    (<LIST_OR_RANGE1>).bind({ java.lang.Object <VAR1> ->
+    delegate.autoGuard(<GUARD1>).bind({ java.lang.Object $$2 ->
+    delegate.autoGuard(<GUARD2>).bind({ java.lang.Object $$1 ->
+    delegate.autoGuard(<LIST_OR_RANGE2>).bind({ java.lang.Object <VAR2> ->
+    delegate.autoGuard(<GUARD3>).bind({ java.lang.Object $$0 ->
+    this.yield(<YIELD_EXPRESSION>)
+    })})})})})
+// select end
+```
+
 Monad comprehension
 --------------------
 
@@ -190,6 +192,6 @@ Any class which have follwing instance method can be used with comprehension.
 * bind(Closure c)
 * yield(x)
 * autoGuard(exp)
-* mzero()
 
--->
+```
+```

@@ -1,3 +1,6 @@
+// If you build under Java 8 ea, you should specify
+// fake java.version property avoid Exception of gradle.
+//  $ gradle -Djava.version=1.7.0 build
 apply plugin: 'groovy'
 
 repositories {
@@ -6,7 +9,7 @@ repositories {
 }
 
 dependencies {
-    compile 'org.codehaus.groovy:groovy-all:2.2.0-rc-3'
+    groovy 'org.codehaus.groovy:groovy-all:2.2.1'
 	testCompile 'junit:junit:4.11'
 }
 
@@ -46,3 +49,84 @@ artifacts {
         }
     }
 }
+
+rootProject.ext.java8Capable = {
+    try {
+        Class.forName('java.util.stream.Stream')
+    } catch (e) {
+        return false
+    }
+    return true
+}
+
+rootProject.ext.useJava8 = {
+    boolean java8 = false
+    // first, check if a system property activates java8 support
+    java8 |= System.hasProperty('java8') && Boolean.valueOf(System.getProperty('java8'))
+    // ultimately, check if the main project has an extension property setting java8 to true
+    // which is the case if the build is started with -Pjava8=true or during install/dist tasks
+    java8 |= rootProject.hasProperty('java8') && (Boolean.valueOf(rootProject.java8))
+    java8 && rootProject.java8Capable()
+}
+    
+test {
+    if (java8Capable()) { //  Skip because extension method don't work under @Grab(Groovy's 2.2.1 BUG?).
+        exclude 'groovyx/comprehension/extension/**'
+    }
+    if (!useJava8()) {
+        exclude 'groovyx/comprehension/StreamTest.class'
+    }
+}
+test.doFirst {
+    if (useJava8()) {
+        println "hoge"
+        reporting.baseDir = 'build/reports-java8'
+    }
+}
+
+processTestResources {
+    if (useJava8()) {
+        from ('./src/main/extension-services-java8') {
+            include 'META-INF/services/org.codehaus.groovy.runtime.ExtensionModule'
+        }
+    }
+    else {
+        from ('./src/main/extension-services') {
+            include 'META-INF/services/org.codehaus.groovy.runtime.ExtensionModule'
+        }
+    }
+}
+
+compileGroovy {
+    if (useJava8()) {
+        jar {
+            classifier = 'java8'
+        }
+    }
+}
+
+jar {
+    if (useJava8()) {
+        from ('./src/main/extension-services-java8') {
+            include 'META-INF/services/org.codehaus.groovy.runtime.ExtensionModule'
+        }
+    }
+    else {
+        from ('./src/main/extension-services') {
+            include 'META-INF/services/org.codehaus.groovy.runtime.ExtensionModule'
+        }
+    }
+}
+
+task buildWithJava8(type: GradleBuild, dependsOn: [check, assemble]) {
+    onlyIf rootProject.java8Capable
+    description = 'Triggers an external build generating the java8 jar'
+    buildFile = 'build.gradle'
+    startParameter.projectProperties['java8']=true
+    tasks = ['jar', 'test']
+}
+
+if (java8Capable()) {
+    build.dependsOn buildWithJava8
+}
+

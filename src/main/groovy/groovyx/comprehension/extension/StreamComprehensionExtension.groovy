@@ -15,22 +15,23 @@
  */
 package groovyx.comprehension.extension
 
+import java.util.stream.Stream
+
 /**
  * @author Uehara Junji(@uehaj)
  */
-// TODO: rewrite in java for GDK DocGenerator 
-class ListComprehensionExtension {
+class StreamComprehensionExtension {
 
-    static List bind(List self, @DelegatesTo(List) Closure c) { // Haskell's >>=
+    static Stream bind(Stream self, @DelegatesTo(Stream) Closure c) { // Haskell's >>=
         c.delegate = self
-        self.collect(c).inject([], {acc,elem->acc+elem})
+        self.flatMap(c)
     }
 
-    static List bind0(List self, value) { // Haskell's >>
-        self.collect{_->value}.inject([], {acc,elem->acc+elem})
+    static Stream bind0(Stream self, value) { // Haskell's >>
+        self.bind{_-> delegate.yield(value)}
     }
 
-    static List ap(List self, List xs) { // Haskell's <*>
+    static Stream ap(Stream self, Stream xs) { // Haskell's <*>
         self.bind({Closure f->
         xs.bind({x->
             if (f.parameterTypes.size() > 1) {
@@ -43,8 +44,8 @@ class ListComprehensionExtension {
             }
         })})
     }
-    
-    static List guard(List _, boolean cond) {
+
+    static Stream guard(Stream _, boolean cond) {
         if (cond) {
             return yield(null, null)
         }
@@ -53,22 +54,22 @@ class ListComprehensionExtension {
         }
     }
 
-    static List where(List _, value) { // alias of guard
+    static Stream where(Stream _, value) { // alias of guard
         return guard(_, value)
     }
 
-    static List autoGuard(List _, value) {
+    static Stream autoGuard(Stream _, value) {
         if (value instanceof Boolean) {
             return guard(_, value)
         }
         return value
     }
 
-    static List yield(List _, value) { // haskell's return
-        return [value]
+    static Stream yield(Stream _, value) { // haskell's return
+        return Stream.of(value)
     }
 
-    static List mzero(List _) { // haskell's mzero
-        return []
+    static Stream mzero(Stream _) { // haskell's mzero
+        return Stream.empty()
     }
 }

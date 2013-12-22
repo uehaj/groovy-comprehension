@@ -22,6 +22,16 @@ foreach {
        ''') == [1,2,3]
    }
 
+   void testImportAsAndFQCN() {
+       assert new GroovyShell().evaluate('''
+import groovyx.comprehension.keyword.select as foreach;
+groovyx.comprehension.keyword.select {
+    x:[1,2,3]
+    yield x
+}
+       ''') == [1,2,3]
+   }
+
    void testImportNormalAndAs() {
        assert new GroovyShell().evaluate('''
 import groovyx.comprehension.keyword.select;

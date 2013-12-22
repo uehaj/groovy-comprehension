@@ -173,7 +173,7 @@ public class ComprehensionTransformation implements ASTTransformation {
             if (imports != null) {
                 for (ImportNode importStatement : imports) {
                     if (TRIGGER_KEYWORD_FQCN.equals(importStatement.getType().getName())) {
-                        factoryTargets.add(importStatement.getAlias());
+                        factoryTargets.add(importStatement.getAlias());  // handle 'import as' for change keywrod.
                     }
                 }
             }
@@ -211,7 +211,6 @@ public class ComprehensionTransformation implements ASTTransformation {
         @groovy.transform.TypeChecked
         public void visitMethodCallExpression(MethodCallExpression call) {
             if (isComprehension(call)) {
-//              println "INFO="+call.hashCode()+"call.method"+call.method
                 ComprehensionInfo info = new ComprehensionInfo(call, sourceUnit, autoGuard);
                 if (info.yieldValue == null || info.steps == null){
                     return;
@@ -240,7 +239,6 @@ public class ComprehensionTransformation implements ASTTransformation {
                         ConstantExpression ce1 = (ConstantExpression)pe2.getProperty()
                         if (pe1.getProperty() instanceof ConstantExpression) {
                             ConstantExpression ce2 = (ConstantExpression)pe1.getProperty();
-//                                    println "${ve.variable} + ${ce1.value} + ${ce2.value}"
                             return ve.variable+'.'+ce1.value+'.'+ce2.value 
                         }
                     }

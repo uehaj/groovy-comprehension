@@ -55,16 +55,9 @@ public class ComprehensionInfo {
         String getVarName() {
             return null
         }
-        String toString() {
-            "    guard($exp)\n"
-        }
     }
     static class CallBind extends Operation {
-        VariableScope scope
         String varName
-        String toString() {
-            "    $varName <- $exp\n"
-        }
     }
     /**
      * Reports an error back to the source unit.
@@ -207,8 +200,6 @@ public class ComprehensionInfo {
                 [ new ExpressionStatement(exp) ], new VariableScope()
             )
         )
-        def scope = new VariableScope()
-        clos.variableScope = scope
         return new ArgumentListExpression(clos)
     }
 
