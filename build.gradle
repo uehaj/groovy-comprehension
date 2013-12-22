@@ -17,7 +17,7 @@ apply plugin: 'maven'
 
 group = 'org.jggug.kobo'
 archivesBaseName = 'groovy-comprehension'
-version = '0.2'
+version = '0.3'
 
 uploadArchives {
     repositories {
@@ -32,8 +32,22 @@ task sourcesJar(type: Jar, dependsOn:classes) {
      from sourceSets.main.allSource
 }
 
+[uploadArchives, install]*.with {
+    dependsOn(sourcesJar)
+    doFirst {
+        if (useJava8()) {
+            trhow new GradleException('You cannot use uploadArchives or install task with the flag [indy] turned'
+                                      +' on because the build handles indy artifacts by itself in that case.')
+        }
+        def archive = jar.archivePath
+        def indyJar = new File(archive.parent, archive.name[0..archive.name.lastIndexOf('.')-1]+'-java8.jar')
+        if (indyJar.exists()) {
+            project.artifacts.add('archives', indyJar)
+        }
+    }
+}
 artifacts {
-     archives sourcesJar
+    archives sourcesJar
 }
 
 [install.repositories.mavenInstaller, uploadArchives.repositories.mavenDeployer]*.pom*.whenConfigured { pom ->
