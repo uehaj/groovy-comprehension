@@ -19,5 +19,6 @@ out
 .gradle
 bin
 build
+target
 #.*#
 tmp
