@@ -9,7 +9,7 @@ repositories {
 }
 
 dependencies {
-    groovy 'org.codehaus.groovy:groovy-all:2.2.1'
+    compile 'org.codehaus.groovy:groovy-all:2.2.1'
 	testCompile 'junit:junit:4.11'
 }
 
@@ -17,7 +17,12 @@ apply plugin: 'maven'
 
 group = 'org.jggug.kobo'
 archivesBaseName = 'groovy-comprehension'
+description = "groovy-comprehension Groovy extension module provides list comprehension functionality similar to Haskell, Scala or Python."
 version = '0.3'
+
+repositories {
+    jcenter()
+}
 
 uploadArchives {
     repositories {
@@ -144,3 +149,50 @@ if (java8Capable()) {
     build.dependsOn buildWithJava8
 }
 
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:0.3'
+    }
+}
+
+apply plugin: 'maven-publish'
+apply plugin: 'bintray'
+
+publishing {
+    publications {
+        groovyMaven(MavenPublication) {
+            from components.java
+            artifact ("build/libs/groovy-comprehension-0.3-java8.jar") {
+               classifier "java8"
+               extension "jar"
+            }
+            artifact ("build/libs/groovy-comprehension-0.3-sources.jar") {
+               classifier "sources"
+               extension "jar"
+            }
+        }
+    }
+}
+
+// set bintrayUser & bintrayKey in gradle.properties
+bintray {
+
+    user = "$bintray_user"
+    key = "$bintray_api_key"
+    publications = ['groovyMaven']
+
+    def projectName = project.name
+    def projectDescription = project.description
+
+    pkg {
+        repo = 'maven' // or your repo name
+        name = projectName      // somehow project.* doesn't work in this closure
+        desc = projectDescription
+        licenses = ['Apache-2.0']
+        labels = ['groovy']
+    }
+    // dryRun = true // whether to run this as dry-run, without deploying
+}
