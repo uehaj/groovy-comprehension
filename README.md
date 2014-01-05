@@ -63,7 +63,7 @@ assert select([x,y]) {
 } == [[2,5], [2,7]]
 ```
 
-Previous code can be write like following:
+Previous code can be written like following:
 
 ```groovy
 assert select([x,y]) {
@@ -128,12 +128,10 @@ assert select ([a,b,c]) {
 
 Try to solve folowing [verbal arithmetic](http://en.wikipedia.org/wiki/Verbal_arithmetic):
 
-```
-   SEND
-+) MORE
-~~~~~~~~~~
-  MONEY
-```
+       SEND
+    +) MORE
+    ~~~~~~~~~~
+      MONEY
 
 code to solve above with comprehension are:
 
