@@ -18,7 +18,7 @@ And whole of the `select (..) {...}` expression emits values of `x*2` for each `
 
 In the other words, above code represent a list which are represented roughly with following math notation:
 
-<a href="http://www.codecogs.com/eqnedit.php?latex=\{x&space;*&space;2&space;|x&space;\ni&space;[&space;1,2,3&space;]&space;\}" target="_blank"><img src="http://latex.codecogs.com/gif.latex?\{x&space;*&space;2&space;|x&space;\ni&space;[&space;1,2,3&space;]&space;\}" title="\{x * 2 |x \ni [ 1,2,3 ] \}" /></a>
+<img src="http://latex.codecogs.com/gif.latex?\{x&space;*&space;2&space;|x&space;\ni&space;[&space;1,2,3&space;]&space;\}" title="\{x * 2 |x \ni [ 1,2,3 ] \}" />
 
 Follwing example uses two variables `x` and `y`.
 
@@ -105,7 +105,7 @@ where `yield` is same meaning of that in Scala, and `return` of Haskell aka `uni
 
 ### Pythagorean Numbers
 
-You can calcurate pythagorean numbers, witch satisfies the equation <a href="http://www.codecogs.com/eqnedit.php?latex=(a^2&space;&plus;&space;b^2&space;=&space;c^2)" target="_blank"><img src="http://latex.codecogs.com/gif.latex?(a^2&space;&plus;&space;b^2&space;=&space;c^2)" title="(a^2 + b^2 = c^2)" /></a>, where `a` is equal or less then 10.
+You can calcurate numbers `a`, `b` and `c` which satisfies the equation <img src="http://latex.codecogs.com/gif.latex?a^2&space;&plus;&space;b^2&space;=&space;c^2" title="a^2 + b^2 = c^2" />, where `a` is equal or less then 10.
 
 ```groovy
 assert select {
