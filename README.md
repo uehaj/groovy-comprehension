@@ -2,7 +2,7 @@
 
 ## Overview
 
-groovy-comprehension Groovy extension module provides list comprehension functionality similar to that of Haskell, Scala or Python.
+groovy-comprehension Groovy extension module provides simple list comprehension functionality similar to that of Haskell, Scala or Python.
 Let's look at simple example.
 
 ```groovy
@@ -15,6 +15,7 @@ assert select(x*2) {
 
 Where `x` is a variable which covers each of the values in list `[1,2,3]`.
 And whole of the `select (..) {...}` expression emits values of `x*2` for each `x` as list.
+
 Follwing example uses two variables `x` and `y`.
 
 ```groovy
@@ -35,20 +36,6 @@ assert select([x,y]) {
     y: 5..7
 } == [[1,5], [1,6], [1,7], [2,5],[2,6],[2,7], [3,5],[3,6],[3,7]]
 ```
-
-## Import and Change Keyword
-
-This comprehension fanctionality is enabled only when explicitly import the class `groovyx.comprehension.keyword.select`.
-So existing code which uses `select` identifier is safe as far as you don't import the class.
-
-You can change the comprehension keyword `select` to other word by using `import as`.
-
-```groovy
-import groovyx.comprehension.keyword.select as foreach
-def list = foreach(n) { n:1..10 }
-```
-
-In this case, `foreach` can be used to specify comprehension instead of `select`.
 
 ## Guard and Auto Guard
 
@@ -75,6 +62,20 @@ assert select([x,y]) {
 ```
 
 When the expression in comprehension returns boolean value at runtime, you can ommit explicit specifing `guard`.
+
+## Import and Change Keyword
+
+This comprehension fanctionality is enabled only when explicitly import the class `groovyx.comprehension.keyword.select`.
+So existing code which uses `select` identifier is safe as far as you don't import the class.
+
+You can change the comprehension keyword `select` to other word by using `import as`.
+
+```groovy
+import groovyx.comprehension.keyword.select as foreach
+def list = foreach(n) { n:1..10 }
+```
+
+In this case, `foreach` can be used to specify comprehension instead of `select`.
 
 ## Explicit Yield
 
@@ -110,7 +111,7 @@ assert select {
 
 ### Pythagorean Numbers(Infinite Stream Version)
 
-On the Java SE 8 platform, you can use infinite lazy stream of `java.util.stream.Stream` in comprehension.
+On the Java SE 8, you can use infinite lazy stream of `java.util.stream.Stream` in comprehension.
 
 ```groovy
 import groovyx.comprehension.keyword.select;
@@ -126,14 +127,15 @@ assert select ([a,b,c]) {
 
 ### Verbal Arithmetic
 
-Try to solve folowing [verbal arithmetic](http://en.wikipedia.org/wiki/Verbal_arithmetic):
+Try to solve folowing [verbal arithmetic](http://en.wikipedia.org/wiki/Verbal_arithmetic).
 
        SEND
     +) MORE
     ~~~~~~~~~~
       MONEY
 
-code to solve above with comprehension are:
+Where alphabet S, E, N, D .. are correspond to one decimal digit different from each other.
+Code to solve above using comprehension are:
 
 ```groovy
 import groovyx.comprehension.keyword.select;
@@ -155,11 +157,11 @@ select("""\
     (S*1000+E*100+N*10+D) + (M*1000+O*100+R*10+E) == (M*10000+O*1000+N*100+E*10+Y)
 }.each { println it }
 ```
-
+Supply possible values for each variables (`S`,`M`,`E` ...), and constraint that should be sutisfied, you can get the answer.
   
 ## How to use
 
-### Gradle
+### With Gradle
 
 groovy-comprehension jar are published at [jcenter](https://bintray.com/bintray/jcenter), so with gradle 1.7 or later:
 
