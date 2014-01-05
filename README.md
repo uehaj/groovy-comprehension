@@ -114,8 +114,8 @@ assert select {
 On the Java SE 8, you can use infinite lazy stream of `java.util.stream.Stream` in comprehension.
 
 ```groovy
-import groovyx.comprehension.keyword.select;
-import static java.util.stream.Collectors.toList;
+import groovyx.comprehension.keyword.select
+import static java.util.stream.Collectors.toList
 
 assert select ([a,b,c]) {
          a: iterate(1,{it+1})
@@ -127,7 +127,7 @@ assert select ([a,b,c]) {
 
 ### Verbal Arithmetic
 
-Try to solve folowing [verbal arithmetic](http://en.wikipedia.org/wiki/Verbal_arithmetic).
+Try to solve following [verbal arithmetic](http://en.wikipedia.org/wiki/Verbal_arithmetic).
 
        SEND
     +) MORE
@@ -135,10 +135,10 @@ Try to solve folowing [verbal arithmetic](http://en.wikipedia.org/wiki/Verbal_ar
       MONEY
 
 Where alphabet S, E, N, D .. are correspond to one decimal digit different from each other.
-Code to solve above using comprehension are:
+You can solve above verbal arithmetic using comprehension:
 
 ```groovy
-import groovyx.comprehension.keyword.select;
+import groovyx.comprehension.keyword.select
 
 def digits = 0..9
 select("""\
@@ -157,21 +157,20 @@ select("""\
     (S*1000+E*100+N*10+D) + (M*1000+O*100+R*10+E) == (M*10000+O*1000+N*100+E*10+Y)
 }.each { println it }
 ```
-Supply possible values for each variables (`S`,`M`,`E` ...), and constraint that should be sutisfied, you can get the answer.
+
+Supply possible values for each variables (`S`,`M`,`E` ...) and constraint that should be sutisfied, you can get the answer.
   
 ## How to use
 
-### With Gradle
+### Through Maven Repository
 
-groovy-comprehension jar are published at [jcenter](https://bintray.com/bintray/jcenter), so with gradle 1.7 or later:
+groovy-comprehension jar are published at [jcenter](https://bintray.com/bintray/jcenter). So with gradle 1.7 or later:
 
 ```groovy
 apply plugin: 'groovy'
 
 repositories {
     jcenter() // specify jcenter
-    mavenLocal()
-    mavenCentral()
 }
 
 dependencies {
@@ -182,10 +181,19 @@ dependencies {
 }
 ```
 
-### Get the jar by hand
+If you are using gradle version older then 1.7, instaead of `jcenter()` specify:
 
-You can download jars from [here](https://bintray.com/bintray/jcenter?filterByPkgName=groovy-comprehension).
-Put them on the classpath directory and specify -cp option to there.
+```groovy
+repositories {
+    maven {
+        url "http://jcenter.bintray.com/"
+    }
+}
+```
+
+### Get the Jar by Hand
+
+Download jars from [here](https://bintray.com/bintray/jcenter?filterByPkgName=groovy-comprehension) and make JVM classpath reach it. For example, specify -cp option to the jar or put the jar into `~/.groovy/lib`. 
 
 ### Grape/@Grab
 
@@ -193,26 +201,46 @@ You can use Groovy [Grape](http://groovy.codehaus.org/Grape)'s `@Grab` annotatio
 
 ```groovy
 @Grab("org.jggug.kobo:groovy-comprehension:0.3")
-import groovyx.comprehension.keyword.select;
+import groovyx.comprehension.keyword.select
 ```
 
-When you want to use Java 8 streams, specifiy classifier `java8` for the Grab parameter:
+[Groovy 2.2 or later support JCenter as their standard grab resolver](http://groovy.codehaus.org/Groovy+2.2+release+notes#Groovy2.2releasenotes-Bintray'sJCenterrepository), you don't have to specify `@GrabResolver` annotation.
+
+When you want to use Java 8 streams in comprehension, specifiy `java8` as classifier:
 
 ```groovy
 @Grab("org.jggug.kobo:groovy-comprehension:0.3:java8")
-import groovyx.comprehension.keyword.select;
+import groovyx.comprehension.keyword.select
 
 select(n) { n:1..10 }.each{
   println it
 }
 ```
 
+To use java 8 stream in comprehension, of cource you have to run groovy on java 8 jre/jdk JVM.
+
+### <font color="red">Caution!</font>
+
+As far as tried with groovy 2.2.1, extenstion method sometimes doesn't work on Java 7 JVM.
+Moreover, java 8 JVM (build 1.8.0-ea-b115) always fails to extend methods through Grab annotation.
+If you get following exception:
+
+```
+Caught: groovy.lang.MissingMethodException: No signature of method: groovy.lang.IntRange.bind() is applicable for argument types: (sample1_2$_run_closure1) values: [sample1_2$_run_closure1@5587f3a]
+     :
+```
+</td></tr>
+</table>
+
 ## Conversion
 
-This feature is implemented as [global AST transformation](http://groovy.codehaus.org/Global+AST+Transformations) and [groovy extension method](http://groovy.codehaus.org/Creating+an+extension+module).
+This feature is implemented with [global AST transformation](http://groovy.codehaus.org/Global+AST+Transformations) and [groovy extension method](http://groovy.codehaus.org/Creating+an+extension+module).
 
 This code
+
 ```groovy
+import groovyx.comprehension.keyword.select
+
 def list = select("(a=$a,b=$b,c=$c)") {
    a: 1..10
    b: 1..a
@@ -241,10 +269,52 @@ is converted to:
 
 ## Monad comprehension
 
-Any class which have follwing instance method can be used with comprehension.
+Not only list and stream, any class which have follwing instance method can be used in comprehension.
 
 * bind(Closure c)
 * yield(x)
-* autoGuard(exp)
+* autoGuard(boolean exp)
 
+Those methods are needed as a meaning of duck typing. But for the convenience class `[groovyx.comprehension.monad.MonadPlus](https://github.com/uehaj/groovy-comprehension/blob/master/src/main/groovy/groovyx/comprehension/monad/MonadPlus.groovy)` is available.
 
+Because of this MonadPlus provices default `guard`, `autoGuard` methods, your class which extends MonadPlus class are available in comprehension if you define following methods.
+
+* bind(Closure c)
+* yield(x)
+* mzero()
+
+### Maybe Monad Example
+
+Just an example, define Maybe monad and use it with comprehension.
+
+```
+import groovyx.comprehension.keyword.select;
+import groovyx.comprehension.monad.MonadPlus
+
+@Newify([Just,Nothing])
+class MaybeMonadTest extends GroovyTestCase {
+    void test01() {
+        assert (select {
+                    Just(1)
+                    Just(3)
+                    Nothing()
+                    Just(7)
+                }) == Nothing()
+    }
+    void test02() {
+        assert (select {
+                    Just(1)
+                    Just(3)
+                    Just(4)
+                    Just(7)
+                }) == Just(7)
+    }
+    void test03() {
+        assert (((Just(1) >> Just(3)) >> Nothing()) >> Just(7)) == Nothing()
+    }
+}
+```
+
+## TODO
+
+ * Support Set and Map
