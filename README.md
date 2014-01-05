@@ -105,7 +105,7 @@ where `yield` is same meaning of that in Scala, and `return` of Haskell aka `uni
 
 ### Pythagorean Numbers
 
-You can calcurate pythagorean numbers <a href="http://www.codecogs.com/eqnedit.php?latex=(a^2&space;&plus;&space;b^2&space;=&space;c^2)" target="_blank"><img src="http://latex.codecogs.com/gif.latex?(a^2&space;&plus;&space;b^2&space;=&space;c^2)" title="(a^2 + b^2 = c^2)" /></a> of which a is equal or less then 10 by following code.
+You can calcurate pythagorean numbers, witch satisfies the equation <a href="http://www.codecogs.com/eqnedit.php?latex=(a^2&space;&plus;&space;b^2&space;=&space;c^2)" target="_blank"><img src="http://latex.codecogs.com/gif.latex?(a^2&space;&plus;&space;b^2&space;=&space;c^2)" title="(a^2 + b^2 = c^2)" /></a>, where `a` is equal or less then 10.
 
 ```groovy
 assert select {
