@@ -2,10 +2,10 @@
 
 ## Overview
 
-groovy-comprehension Groovy extension module provides list comprehension functionality similar to Haskell, Scala or Python.
+groovy-comprehension Groovy extension module provides list comprehension functionality similar to that of Haskell, Scala or Python.
 Let's look at simple example.
 
-```
+```groovy
 import groovyx.comprehension.keyword.select
 
 assert select(x*2) {
@@ -13,11 +13,11 @@ assert select(x*2) {
 } == [2, 4, 6]
 ```
 
-Where ```x``` is a variable which covers each of the values in list ```[1,2,3]```.
-And whole of the ```select (..) {...}``` expression emits values of ```x*2``` for each ```x``` as list.
-Follwing example uses two variables ```x``` and ```y```.
+Where `x` is a variable which covers each of the values in list `[1,2,3]`.
+And whole of the `select (..) {...}` expression emits values of `x*2` for each `x` as list.
+Follwing example uses two variables `x` and `y`.
 
-```
+```groovy
 import groovyx.comprehension.keyword.select
 
 assert select([x,y]) {
@@ -26,35 +26,35 @@ assert select([x,y]) {
 } == [[1,5], [1,6], [1,7], [2,5],[2,6],[2,7], [3,5],[3,6],[3,7]]
 ```
 
-In this case, all combinations for all value of ```x``` and ```y``` are generated.
+In this case, all combinations for all value of `x` and `y` are generated.
 You can also use groovy's range expression to specify sequential values.
 
-```
+```groovy
 assert select([x,y]) {
     x: 1..3
     y: 5..7
 } == [[1,5], [1,6], [1,7], [2,5],[2,6],[2,7], [3,5],[3,6],[3,7]]
 ```
 
-## Import and Change keyword
+## Import and Change Keyword
 
-Comprehension fanctionality is enabled only when explicitly import the class ```groovyx.comprehension.keyword.select```.
-So existing code which uses ```select``` identifier is safe as far as you don't import the class.
+This comprehension fanctionality is enabled only when explicitly import the class `groovyx.comprehension.keyword.select`.
+So existing code which uses `select` identifier is safe as far as you don't import the class.
 
-You can change the comprehension keyword ```select``` to other word by using ```import as```.
+You can change the comprehension keyword `select` to other word by using `import as`.
 
-```
+```groovy
 import groovyx.comprehension.keyword.select as foreach
 def list = foreach(n) { n:1..10 }
 ```
 
-In this case, ```foreach``` can be used to specify comprehension instead of ```select```.
+In this case, `foreach` can be used to specify comprehension instead of `select`.
 
-## Guard
+## Guard and Auto Guard
 
 You can specify guard clause to filter values.
 
-```
+```groovy
 assert select([x,y]) {
     x: 1..3
     guard(x % 2 == 0)  // x is 2
@@ -63,11 +63,9 @@ assert select([x,y]) {
 } == [[2,5], [2,7]]
 ```
 
-## Auto Guard
-
 Previous code can be write like following:
 
-```
+```groovy
 assert select([x,y]) {
     x: 1..3
     x % 2 == 0
@@ -76,23 +74,23 @@ assert select([x,y]) {
 } == [[2,5], [2,7]]
 ```
 
-When the expression in comprehension returns boolean value at runtime, you can ommit explicit specifing ```guard```.
+When the expression in comprehension returns boolean value at runtime, you can ommit explicit specifing `guard`.
 
-## Explicit yield
+## Explicit Yield
 
 This form
 
-```
+```groovy
 def list = select(n) { n:1..10 }
 ```
 
 Is semantically equals to following:
 
-```
+```groovy
 def list = select { n:1..10; yield(n) }
 ```
 
-where ```yield``` is same meaning of that in Scala, and ```return``` of Haskell aka ```Unit```.
+where `yield` is same meaning of that in Scala, and `return` of Haskell aka `unit` function.
 
 ## Examples
 
@@ -100,7 +98,7 @@ where ```yield``` is same meaning of that in Scala, and ```return``` of Haskell 
 
 You can calcurate pythagorean numbers (a^2 + b^2 == c^2) of which a is equal or less then 10 by following code.
 
-```
+```groovy
 assert select {
     a: 1..10
     b: 1..a
@@ -110,11 +108,11 @@ assert select {
 } == ["(a=4,b=3,c=5)", "(a=8,b=6,c=10)"]
 ```
 
-### Infinite Stream Version of Pythagorean Numbers
+### Pythagorean Numbers(Infinite Stream Version)
 
-On the Java SE 8 platform, you can use infinite lazy stream of java.util.stream.Stream in comprehension.
+On the Java SE 8 platform, you can use infinite lazy stream of `java.util.stream.Stream` in comprehension.
 
-```
+```groovy
 import groovyx.comprehension.keyword.select;
 import static java.util.stream.Collectors.toList;
 
@@ -139,7 +137,7 @@ Try to solve folowing [verbal arithmetic](http://en.wikipedia.org/wiki/Verbal_ar
 
 code to solve above with comprehension are:
 
-```
+```groovy
 import groovyx.comprehension.keyword.select;
 
 def digits = 0..9
@@ -167,7 +165,7 @@ select("""\
 
 groovy-comprehension jar are published at [jcenter](https://bintray.com/bintray/jcenter), so with gradle 1.7 or later:
 
-```
+```groovy
 apply plugin: 'groovy'
 
 repositories {
@@ -191,16 +189,16 @@ Put them on the classpath directory and specify -cp option to there.
 
 ### Grape/@Grab
 
-You can use ```@Grab``` annotation:
+You can use Groovy [Grape](http://groovy.codehaus.org/Grape)'s `@Grab` annotation:
 
-```
+```groovy
 @Grab("org.jggug.kobo:groovy-comprehension:0.3")
 import groovyx.comprehension.keyword.select;
 ```
 
-To use Java8 streams, specifiy classifier ```java8```:
+When you want to use Java 8 streams, specifiy classifier `java8` for the Grab parameter:
 
-```
+```groovy
 @Grab("org.jggug.kobo:groovy-comprehension:0.3:java8")
 import groovyx.comprehension.keyword.select;
 
@@ -214,7 +212,7 @@ select(n) { n:1..10 }.each{
 This feature is implemented as [global AST transformation](http://groovy.codehaus.org/Global+AST+Transformations) and [groovy extension method](http://groovy.codehaus.org/Creating+an+extension+module).
 
 This code
-```
+```groovy
 def list = select("(a=$a,b=$b,c=$c)") {
    a: 1..10
    b: 1..a
@@ -225,7 +223,7 @@ def list = select("(a=$a,b=$b,c=$c)") {
 
 is converted to:
 
-```
+```java
     public java.lang.Object run() {
         java.lang.Object list = (1..10).bind({ java.lang.Object a ->
             delegate.autoGuard((1.. a )).bind({ java.lang.Object b ->
