@@ -18,7 +18,7 @@ And whole of the `select (..) {...}` expression emits values of `x*2` for each `
 
 In the other words, above code represent a list which are represented roughly with following math notation:
 
-<img src="http://latex.codecogs.com/gif.latex?\{x&space;*&space;2&space;|x&space;\ni&space;[&space;1,2,3&space;]&space;\}" title="\{x * 2 |x \ni [ 1,2,3 ] \}" />
+<img src="http://latex.codecogs.com/gif.latex?\{x&space;*&space;2&space;|x&space;\in&space;[&space;1,2,3&space;]&space;\}" title="\{x * 2 |x \in [ 1,2,3 ] \}" />
 
 Follwing example uses two variables `x` and `y`.
 
@@ -69,7 +69,7 @@ When the expression in comprehension returns boolean value at runtime, you can o
 
 Above code are roughly correspondes to following math expression:
 
-<a href="http://www.codecogs.com/eqnedit.php?latex=\{&space;\[&space;x,&space;y\]&space;|x&space;\ni&space;[&space;1,2,3&space;]&space;\wedge&space;x&space;\%&space;2&space;=&space;0&space;\wedge&space;y&space;\ni&space;[5,6,7]&space;\wedge&space;y&space;\%&space;2&space;=&space;1\}" target="_blank"><img src="http://latex.codecogs.com/gif.latex?\{&space;\[&space;x,&space;y\]&space;|x&space;\ni&space;[&space;1,2,3&space;]&space;\wedge&space;x&space;\%&space;2&space;=&space;0&space;\wedge&space;y&space;\ni&space;[5,6,7]&space;\wedge&space;y&space;\%&space;2&space;=&space;1\}" title="\{ \[ x, y\] |x \ni [ 1,2,3 ] \wedge x \% 2 = 0 \wedge y \ni [5,6,7] \wedge y \% 2 = 1\}" /></a>
+<a href="http://www.codecogs.com/eqnedit.php?latex=\{&space;\[&space;x,&space;y\]&space;|x&space;\in&space;[&space;1,2,3&space;]&space;\wedge&space;x&space;\%&space;2&space;=&space;0&space;\wedge&space;y&space;\in&space;[5,6,7]&space;\wedge&space;y&space;\%&space;2&space;=&space;1\}" target="_blank"><img src="http://latex.codecogs.com/gif.latex?\{&space;\[&space;x,&space;y\]&space;|x&space;\in&space;[&space;1,2,3&space;]&space;\wedge&space;x&space;\%&space;2&space;=&space;0&space;\wedge&space;y&space;\in&space;[5,6,7]&space;\wedge&space;y&space;\%&space;2&space;=&space;1\}" title="\{ \[ x, y\] |x \in [ 1,2,3 ] \wedge x \% 2 = 0 \wedge y \in [5,6,7] \wedge y \% 2 = 1\}" /></a>
 
 ## Import and Change Keyword
 
