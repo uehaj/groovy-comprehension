@@ -283,7 +283,7 @@ Not only list and stream, any class which have follwing instance method can be u
 * yield(x)
 * autoGuard(boolean exp)
 
-Those methods are needed as a meaning of duck typing. But for the convenience class `[groovyx.comprehension.monad.MonadPlus](https://github.com/uehaj/groovy-comprehension/blob/master/src/main/groovy/groovyx/comprehension/monad/MonadPlus.groovy)` is available.
+Those methods are needed on the meaning of duck typing (It is enough to have method but extends/implement perticuler class/interface). But as for convenience, class [groovyx.comprehension.monad.MonadPlus](https://github.com/uehaj/groovy-comprehension/blob/master/src/main/groovy/groovyx/comprehension/monad/MonadPlus.groovy) is available.
 
 Because of this MonadPlus provices default `guard`, `autoGuard` methods, your class which extends MonadPlus class are available in comprehension if you define following methods.
 
@@ -326,3 +326,5 @@ class MaybeMonadTest extends GroovyTestCase {
 ## TODO
 
  * Support Set and Map
+ * Make static type checking complient
+ * Implement monadic combinator parser library top of list comprehension using this comprehension
