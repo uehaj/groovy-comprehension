@@ -227,20 +227,21 @@ select(n) { n:1..10 }.each{
 
 To use java 8 stream in comprehension, of cource you have to run groovy on java 8 jre/jdk JVM.
 
-### <font color="red">Caution!</font>
+### <font color="red">Known Problems</font>
 
-As far as tried with groovy 2.2.1, extenstion method sometimes doesn't work on Java 7 JVM.
-Moreover, java 8 JVM (build 1.8.0-ea-b115) always fails to extend methods through Grab annotation.
-If you get following exception:
+As far as tried with groovy 2.2/2.3b, MacOS X 10.9, extenstion method looks sometimes doesn't work on Java 7/8 JVM.
+When you get following exception sometimes/always:
 
 ```
 Caught: groovy.lang.MissingMethodException: No signature of method: groovy.lang.IntRange.bind() is applicable for argument types: (sample1_2$_run_closure1) values: [sample1_2$_run_closure1@5587f3a]
      :
 ```
-</td></tr>
-</table>
 
-## Conversion
+Workaround is to download jars from [here](https://bintray.com/bintray/jcenter?filterByPkgName=groovy-comprehension) statically to ~/.groovy/lib.
+
+Same problem encounters when using [timyates's groovy-stream](https://github.com/timyates/groovy-stream), so I think this is not the BUG of this module. This issues are reported [GROOVY-6446](http://jira.codehaus.org/browse/GROOVY-6446) and [GROOVY-6447](http://jira.codehaus.org/browse/GROOVY-6447). please vote!
+
+## The Conversion
 
 This feature is implemented with [global AST transformation](http://groovy.codehaus.org/Global+AST+Transformations) and [groovy extension method](http://groovy.codehaus.org/Creating+an+extension+module).
 
@@ -327,4 +328,4 @@ class MaybeMonadTest extends GroovyTestCase {
 
  * Support Set and Map
  * Make static type checking complient
- * Implement monadic combinator parser library top of list comprehension using this comprehension
+ * Implement monadic combinator parser library using this comprehension
