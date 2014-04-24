@@ -258,7 +258,7 @@ def list = select("(a=$a,b=$b,c=$c)") {
 }
 ```
 
-is converted to:
+is converted to follwing with [ComprehensionTransformation](https://github.com/uehaj/groovy-comprehension/blob/master/src/main/groovy/groovyx/comprehension/transform/ComprehensionTransformation.groovy):
 
 ```java
     public java.lang.Object run() {
@@ -273,6 +273,35 @@ is converted to:
         })
         list == ['(a=4,b=3,c=5)', '(a=8,b=6,c=10)']
         this.println(list)
+    }
+```
+
+You can desable autoGuard facility by specifying system property "groovy.comprehension.autoGuard" to not "true". In the case of specify -Dgroovy.comprehension.autoGuard=false with groovy or JVM, following code explicitry using guard(you can't ommit guard in this case):
+
+```java
+import groovyx.comprehension.keyword.select
+
+def list = select("(a=$a,b=$b,c=$c)") {
+   a: 1..10
+   b: 1..a
+   c: a..a+b
+   guard(a**2 + b**2 == c**2)
+}
+```
+
+is converted to:
+
+```java
+    public java.lang.Object run() {
+        java.lang.Object list = (1..10).bind({ java.lang.Object a ->
+            (1.. a ).bind({ java.lang.Object b ->
+                ( a .. a + b ).bind({ java.lang.Object c ->
+                    this.guard( a ** 2 + b ** 2 == c ** 2).bind({ java.lang.Object $$0 ->
+                        delegate.yield("(a=$a,b=$b,c=$c)")
+                    })
+                })
+            })
+        })
     }
 ```
 
