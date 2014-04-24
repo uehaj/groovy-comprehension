@@ -166,7 +166,15 @@ select("""\
 }.each { println it }
 ```
 
-Supply possible values for each variables (`S`,`M`,`E` ...) and constraint that should be sutisfied, you can get the answer.
+above code emit following:
+
+```
+  9567
++)1085
+ 10652
+```
+
+You can see simplify the code using list-comprehension. Supply possible values for each variables (`S`,`M`,`E` ...) and add constraint that should be sutisfied, you can get the answer.
   
 ## How to use
 
