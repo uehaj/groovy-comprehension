@@ -9,7 +9,7 @@ repositories {
 }
 
 dependencies {
-    compile 'org.codehaus.groovy:groovy-all:2.2.1'
+    compile 'org.codehaus.groovy:groovy-all:2.3.0-rc-1'
 	testCompile 'junit:junit:4.11'
 }
 
@@ -89,9 +89,9 @@ rootProject.ext.useJava8 = {
 }
     
 test {
-    if (java8Capable()) { //  Skip because extension method don't work under @Grab(Groovy's 2.2.1 BUG?).
-        exclude 'groovyx/comprehension/extension/**'
-    }
+    //    if (java8Capable()) { //  Skip because extension method don't work under @Grab(Groovy's 2.2.1 BUG?).
+    //        exclude 'groovyx/comprehension/extension/**'
+    //    }
     if (!useJava8()) {
         exclude 'groovyx/comprehension/StreamTest.class'
     }
