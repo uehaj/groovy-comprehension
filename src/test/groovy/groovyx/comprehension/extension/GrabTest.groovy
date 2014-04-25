@@ -1,7 +1,7 @@
 /**
  * Before run this test, you have to do follwing command:
  *
- * % gradle updateArchives
+ * % gradle uploadArchives
  *
  * This installs maven pom to /tmp/myRepo directory.
  */
