@@ -173,7 +173,7 @@ public class ComprehensionInfo {
         }
     }
 
-    @groovy.transform.TypeChecked
+    //    @groovy.transform.TypeChecked
     List<Operation> genSteps(List<Statement> statements) {
         def result = []
         statements.each { Statement statement ->
