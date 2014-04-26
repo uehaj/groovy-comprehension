@@ -71,6 +71,19 @@ Above code are roughly correspondes to following math expression:
 
 <a href="http://www.codecogs.com/eqnedit.php?latex=\{&space;\[&space;x,&space;y\]&space;|x&space;\in&space;[&space;1,2,3&space;]&space;\wedge&space;x&space;\%&space;2&space;=&space;0&space;\wedge&space;y&space;\in&space;[5,6,7]&space;\wedge&space;y&space;\%&space;2&space;=&space;1\}" target="_blank"><img src="http://latex.codecogs.com/gif.latex?\{&space;\[&space;x,&space;y\]&space;|x&space;\in&space;[&space;1,2,3&space;]&space;\wedge&space;x&space;\%&space;2&space;=&space;0&space;\wedge&space;y&space;\in&space;[5,6,7]&space;\wedge&space;y&space;\%&space;2&space;=&space;1\}" title="\{ \[ x, y\] |x \in [ 1,2,3 ] \wedge x \% 2 = 0 \wedge y \in [5,6,7] \wedge y \% 2 = 1\}" /></a>
 
+You can specify guard clause to filter values.
+
+where is just alias of whare.
+
+```groovy
+assert select([x,y]) {
+    x: 1..3
+    where(x % 2 == 0)  // x is 2
+    y: 5..7
+    where(y % 2 == 1) // y is 5 or 7
+} == [[2,5], [2,7]]
+```
+
 ## Import and Change Keyword
 
 This comprehension fanctionality is enabled only when explicitly import the class `groovyx.comprehension.keyword.select`.
@@ -174,7 +187,7 @@ above code emit following:
  10652
 ```
 
-You can see simplify the code using list-comprehension. Supply possible values for each variables (`S`,`M`,`E` ...) and add constraint that should be sutisfied, you can get the answer.
+You can simplify the code using list-comprehension. Supply possible values for each variables (`S`,`M`,`E` ...) and add constraint that should be sutisfied, you can get the answer.
   
 ## How to use
 
