@@ -1,4 +1,4 @@
 # see http://groovy.codehaus.org/Creating+an+extension+module
 moduleName=comprehension
-moduleVersion=0.3
-extensionClasses=groovyx.comprehension.extension.ListComprehensionExtension
+moduleVersion=0.4
+extensionClasses=groovyx.comprehension.extension.ListComprehensionExtension,groovyx.comprehension.extension.IteratorComprehensionExtension

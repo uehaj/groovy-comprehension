@@ -22,16 +22,16 @@ import java.util.stream.Stream
  */
 class StreamComprehensionExtension {
 
-    static Stream bind(Stream self, @DelegatesTo(Stream) Closure c) { // Haskell's >>=
+    static <T> Stream<T> bind(Stream<T> self, @DelegatesTo(Stream) Closure c) { // Haskell's >>=
         c.delegate = self
         self.flatMap(c)
     }
 
-    static Stream bind0(Stream self, value) { // Haskell's >>
+    static <T> Stream<T> bind0(Stream<T> self, value) { // Haskell's >>
         self.bind{_-> delegate.yield(value)}
     }
 
-    static Stream ap(Stream self, Stream xs) { // Haskell's <*>
+    static <T> Stream<T> ap(Stream<T> self, Stream<T> xs) { // Haskell's <*>
         self.bind({Closure f->
         xs.bind({x->
             if (f.parameterTypes.size() > 1) {
@@ -45,7 +45,7 @@ class StreamComprehensionExtension {
         })})
     }
 
-    static Stream guard(Stream _, boolean cond) {
+    static <T> Stream<T> guard(Stream<T> _, boolean cond) {
         if (cond) {
             return yield(null, null)
         }
@@ -54,22 +54,22 @@ class StreamComprehensionExtension {
         }
     }
 
-    static Stream where(Stream _, value) { // alias of guard
+    static <T> Stream<T> where(Stream<T> _, value) { // alias of guard
         return guard(_, value)
     }
 
-    static Stream autoGuard(Stream _, value) {
+    static <T> Stream<T> autoGuard(Stream<T> _, value) {
         if (value instanceof Boolean) {
             return guard(_, value)
         }
         return value
     }
 
-    static Stream yield(Stream _, value) { // haskell's return
-        return Stream.of(value)
+    static <T> Stream<T> yield(Stream<T> _, value) { // haskell's return
+        return Stream.<T>of(value)
     }
 
-    static Stream mzero(Stream _) { // haskell's mzero
-        return Stream.empty()
+    static <T> Stream<T> mzero(Stream<T> _) { // haskell's mzero
+        return Stream.<T>empty()
     }
 }

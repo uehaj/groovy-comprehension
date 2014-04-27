@@ -51,6 +51,5 @@ class DirectBindHandlingTest extends GroovyTestCase {
         assert listManip8 == [1+4, 1+5, 1+6, 2+4, 2+5, 2+6, 3+4, 3+5, 3+6]
         // 「1 or 2 or 3」と「4 or 5 or 6」を足し算した結果は、
         // 「5 or 6 or 7 or 6 or 7 or 8 or 7 or 8 or 9」となる。
-        println listManip8
     }
 }

@@ -14,28 +14,31 @@
  * limitations under the License.
  */
 package groovyx.comprehension.extension
-
+import groovy.transform.stc.ClosureParams
+import groovy.transform.stc.FirstParam
+import groovy.transform.stc.FirstParam.FirstGenericType
+import org.codehaus.groovy.runtime.DefaultGroovyMethods as DGM
 /**
  * @author Uehara Junji(@uehaj)
  */
 // TODO: rewrite in java for GDK DocGenerator 
 class ListComprehensionExtension {
 
-    static List bind(List self, @DelegatesTo(List) Closure c) { // Haskell's >>=
+    static <T> Collection<T> bind(@DelegatesTo.Target('a') Collection<T> self, @DelegatesTo(target='a') @ClosureParams(FirstParam.FirstGenericType.class) Closure c) { // Haskell's >>=
         c.delegate = self
-        self.collect(c).inject([], {acc,elem->acc+elem})
+        DGM.asList(self).collect(c).inject([], {acc,elem->acc+elem})
     }
 
-    static List bind0(List self, value) { // Haskell's >>
-        self.collect{_->value}.inject([], {acc,elem->acc+elem})
+    static <T> Collection<T> bind0(Collection<T> self, value) { // Haskell's >>
+        DGM.asList(self).collect().inject([], {acc,elem->acc+elem})
     }
 
-    static List ap(List self, List xs) { // Haskell's <*>
-        self.bind({Closure f->
+    static <T> Collection<T> ap(Collection<T> self, Collection<T> xs) { // Haskell's <*>
+        DGM.asList(self).bind({Closure f->
         xs.bind({x->
             if (f.parameterTypes.size() > 1) {
-                // Haskellの様に引数が足り無ければ自動的に
-                // 部分適用になるということは無いので、明示的に部分適用。
+                // explicit partial application. (don't be curried automatically
+                // dislike Haskel.)
                 return [f.curry(x)]
             }
             else {
@@ -44,7 +47,7 @@ class ListComprehensionExtension {
         })})
     }
     
-    static List guard(List _, boolean cond) {
+    static <T> Collection<T> guard(Collection<T> _, boolean cond) {
         if (cond) {
             return yield(null, null)
         }
@@ -53,22 +56,22 @@ class ListComprehensionExtension {
         }
     }
 
-    static List where(List _, value) { // alias of guard
+    static <T> Collection<T> where(Collection<T> _, value) { // alias of guard
         return guard(_, value)
     }
 
-    static List autoGuard(List _, value) {
+    static <T> Collection<T> autoGuard(Collection<T> _, value) {
         if (value instanceof Boolean) {
             return guard(_, value)
         }
         return value
     }
 
-    static List yield(List _, value) { // haskell's return
+    static <T> Collection<T> yield(Collection<T> _, value) { // haskell's return
         return [value]
     }
 
-    static List mzero(List _) { // haskell's mzero
+    static <T> Collection<T> mzero(Collection<T> _) { // haskell's mzero
         return []
     }
 }

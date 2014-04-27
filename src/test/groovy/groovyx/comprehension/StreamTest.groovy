@@ -19,7 +19,8 @@ class StreamTest extends GroovyTestCase {
         assert select(n) {
           n: iterate(0,{it+1})
           where(n % 2 == 0)
-        }.limit(10).collect(toList()) == [0, 2, 4, 6, 8, 10, 12, 14, 16, 18]
+          where(n % 3 == 0)
+        }.limit(10).collect(toList()) == [0, 6, 12]
     }
 
     void test03() {

@@ -1,6 +1,8 @@
-// If you build under Java 8 ea, you should specify
-// fake java.version property avoid Exception of gradle.
-//  $ gradle -Djava.version=1.7.0 build
+// One test is depends on maven repositry upload.
+// You have to uploadArcives before test:
+// $ gradle uploadArchives
+// $ gradle test
+
 apply plugin: 'groovy'
 
 repositories {
@@ -18,7 +20,7 @@ apply plugin: 'maven'
 group = 'org.jggug.kobo'
 archivesBaseName = 'groovy-comprehension'
 description = "groovy-comprehension Groovy extension module provides list comprehension functionality similar to Haskell, Scala or Python."
-version = '0.3'
+version = '0.4'
 
 repositories {
     jcenter()
@@ -94,12 +96,6 @@ test {
     //    }
     if (!useJava8()) {
         exclude 'groovyx/comprehension/StreamTest.class'
-    }
-}
-test.doFirst {
-    if (useJava8()) {
-        println "hoge"
-        reporting.baseDir = 'build/reports-java8'
     }
 }
 
