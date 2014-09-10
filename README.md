@@ -250,17 +250,17 @@ To use java 8 stream in comprehension, of cource you have to run groovy on java 
 
 ~~### <font color="red">Known Problems</font>~~
 
-~~As far as tried with groovy 2.2/2.3b, MacOS X 10.9, extenstion method looks sometimes doesn't work on Java 7/8 JVM.
-When you get following exception sometimes/always:
+~~As far as tried with groovy 2.2/2.3b, MacOS X 10.9, extenstion method looks sometimes doesn't work on Java 7/8 JVM.~~
+~~When you get following exception sometimes/always:~~
 
-```
-Caught: groovy.lang.MissingMethodException: No signature of method: groovy.lang.IntRange.bind() is applicable for argument types: (sample1_2$_run_closure1) values: [sample1_2$_run_closure1@5587f3a]
-     :
-```
+~~```~~
+~~Caught: groovy.lang.MissingMethodException: No signature of method: groovy.lang.IntRange.bind() is applicable for argument types: (sample1_2$_run_closure1) values: [sample1_2$_run_closure1@5587f3a]~~
+~~     :~~
+~~```~~
 
-Workaround is to download jars from [here](https://bintray.com/bintray/jcenter?filterByPkgName=groovy-comprehension) statically to ~/.groovy/lib.
+~~Workaround is to download jars from [here](https://bintray.com/bintray/jcenter?filterByPkgName=groovy-comprehension) statically to ~/.groovy/lib.~~
 
-Same problem encounters when using [timyates's groovy-stream](https://github.com/timyates/groovy-stream), so I think this is not the BUG of this module. This issues are reported [GROOVY-6446](http://jira.codehaus.org/browse/GROOVY-6446) and [GROOVY-6447](http://jira.codehaus.org/browse/GROOVY-6447). please vote!~~
+~~Same problem encounters when using [timyates's groovy-stream](https://github.com/timyates/groovy-stream), so I think this is not the BUG of this module. This issues are reported [GROOVY-6446](http://jira.codehaus.org/browse/GROOVY-6446) and [GROOVY-6447](http://jira.codehaus.org/browse/GROOVY-6447). please vote!~~
 Those issues are fixed. Thanks!
 
 ## The Conversion
